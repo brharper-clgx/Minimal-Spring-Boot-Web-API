@@ -1,0 +1,30 @@
+{
+    "run": {
+        "default": "",
+        "items": [
+            {
+                "name": "Minimal-Spring-Boot-Web-API",
+                "projectName": "Minimal-Spring-Boot-Web-API",
+                "workingDirectory": "c:\\Users\\brharper\\workspace\\Minimal-Spring-Boot-Web-API",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    },
+    "debug": {
+        "default": "",
+        "items": [
+            {
+                "name": "Minimal-Spring-Boot-Web-API",
+                "projectName": "Minimal-Spring-Boot-Web-API",
+                "workingDirectory": "c:\\Users\\brharper\\workspace\\Minimal-Spring-Boot-Web-API",
+                "args": [],
+                "vmargs": [],
+                "env": {},
+                "preLaunchTask": ""
+            }
+        ]
+    }
+}
