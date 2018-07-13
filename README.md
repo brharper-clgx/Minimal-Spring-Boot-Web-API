@@ -12,3 +12,142 @@
     - Add a 'GRADLE_HOME' System Environment Variable which points to this directory.
     - Add the Gradle directory's *bin* folder to your System Path variable.
 
+## Initialize Gradle Project
+Use the command 'gradle init' to initialize gradle in your project's root directory:
+```
+> gradle init
+```
+
+If a 'gradlew' file is not created, use the following command:
+```
+> gradle wrapper
+```
+
+Next, edit the ***build.gradle*** file with the following:
+```
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.3.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+bootJar {
+    baseName = 'gs-rest-service'
+    version =  '0.1.0'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+```
+
+## Source Code
+Next create the following subdirectory structure for your source code:
+```
+> mkdir -p src/main/java/hello
+```
+
+Create your first resource representation class:
+```
+src/main/java/hello/Greeting.java
+```
+```
+package hello;
+
+public class Greeting {
+
+    private final long id;
+    private final String content;
+
+    public Greeting(long id, String content) {
+        this.id = id;
+        this.content = content;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getContent() {
+        return content;
+    }
+}
+```
+
+Now, create a controller:
+```src/main/java/hello/GreetingController.java```
+
+```
+package hello;
+
+import java.util.concurrent.atomic.AtomicLong;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+public class GreetingController {
+
+    private static final String template = "Hello, %s!";
+    private final AtomicLong counter = new AtomicLong();
+
+    @RequestMapping("/greeting")
+    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+        return new Greeting(
+            counter.incrementAndGet(), 
+            String.format(template, name)
+        );
+    }
+}
+```
+
+Finally, create the main application class:
+```src/main/java/hello/Application.java```
+
+```
+package hello;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+}
+```
+
+## Test It Out
+Run the web app with:
+```
+> ./gradlew bootrun
+```
+
+Open a web browser and visit [localhost:8080/greeting](localhost:8080/greeting). Your browser should display the following:
+```
+{"id":1,"content":"Hello, World!"}
+```
+
+Change the url to [http://localhost:8080/greeting?name=YourName](http://localhost:8080/greeting?name=YourName) to display:
+```
+{"id":2,"content":"Hello, YourName!"}
+```
