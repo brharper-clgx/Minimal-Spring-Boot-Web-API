@@ -136,13 +136,13 @@ public class Application {
 }
 ```
 
-## Test It Out
+## Try It Out
 Run the web app with:
 ```
 > ./gradlew bootrun
 ```
 
-Open a web browser and visit [localhost:8080/greeting](localhost:8080/greeting). Your browser should display the following:
+Open a web browser and visit [http://localhost:8080/greeting](http://localhost:8080/greeting). Your browser should display the following:
 ```
 {"id":1,"content":"Hello, World!"}
 ```
