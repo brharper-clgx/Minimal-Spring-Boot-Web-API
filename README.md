@@ -212,7 +212,7 @@ You can run tests either through your IDE (VS Code has an extension: Java Test R
 Create a subdirectory structure for your tests:
 
 ```
-> mkdir -p src/test/java/hello/unit
+> mkdir -p src/test/java/hello/integration
 ```
 
 Create a test class:
