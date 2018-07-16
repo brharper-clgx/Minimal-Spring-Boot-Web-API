@@ -54,7 +54,6 @@ targetCompatibility = 1.8
 
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
-    testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 ```
 
@@ -153,17 +152,30 @@ Change the url to [http://localhost:8080/greeting?name=YourName](http://localhos
 ```
 
 ## Write Tests
-Create a subdirectory structure for your tests:
+Add a new 'testCompile' dependenc to the ```build.gradle``` file:
+```
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+```
+
+### Unit Tests
+Create a subdirectory structure for your unit tests:
 
 ```
-> mkdir -p src/test/java/hello
+> mkdir -p src/test/java/hello/unit
 ```
 
 Create a test class:
-```src/test/java/hello/GreetingControllerTest.java```
+```src/test/java/hello/unit/GreetingControllerTest.java```
 
 ```
-package hello;
+package hello.unit;
+
+import hello.Greeting;
+import hello.GreetingController;
 
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
@@ -196,3 +208,42 @@ You can run tests either through your IDE (VS Code has an extension: Java Test R
 ```
 > ./gradlew test -i
 ```
+
+<!-- ### Integration Tests
+Create a subdirectory structure for your tests:
+
+```
+> mkdir -p src/test/java/hello/unit
+```
+
+Create a test class:
+```src/test/java/hello/unit/integration/GreetingControllerTest.java```
+
+```
+package hello;
+
+import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class GreetingControllerTests {
+
+	@Test
+	public void GreetingConroller_greeting_ReturnsGreeting() {
+		// Arrange
+		GreetingController target = new GreetingController();
+		
+		// Act
+		Greeting result = target.greeting("Joe Tester");
+
+		// Assert
+		assertEquals(1, result.getId());
+		assertEquals("Hello, Joe Tester!", result.getContent());
+	}
+
+}
+``` -->
