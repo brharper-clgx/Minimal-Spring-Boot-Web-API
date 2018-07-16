@@ -169,7 +169,7 @@ Create a subdirectory structure for your unit tests:
 ```
 
 Create a test class:
-```src/test/java/hello/unit/GreetingControllerTest.java```
+```src/test/java/hello/unit/GreetingControllerTests.java```
 
 ```
 package hello.unit;
@@ -216,7 +216,7 @@ Create a subdirectory structure for your tests:
 ```
 
 Create a test class:
-```src/test/java/hello/unit/integration/GreetingControllerTest.java```
+```src/test/java/hello/unit/integration/GreetingControllerTests.java```
 
 ```
 package hello.integration;
@@ -245,7 +245,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class GreetingContorllerTests {
+public class GreetingControllerTests {
 
 	@Autowired
 	private MockMvc mvc;
@@ -341,7 +341,7 @@ public class GreetingController {
 }
 ```
 
-### Mocking Components
+### Stubbing Components
 Your IDE will probably have let you know that the unit test you wrote is now broken. This is because the GreetingController now requires a parameter in its constructor. If we want to isolate the controller from its dependencies then we should mock the service out. We can use (Mockito)[http://site.mockito.org/].
 
 *Note: the test we're about to write is silly. But, for the sake of illustrating the use of Mockito, bear with me.*
