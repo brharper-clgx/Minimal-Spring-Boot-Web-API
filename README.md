@@ -283,7 +283,7 @@ public class GreetingControllerTests {
 ## Dependency Injection
 Let's extract the GreetingController logic into a service and inject it. First create the interface:
 
-```src/test/java/hello/IGreetingService.java```
+```src/java/hello/IGreetingService.java```
 
 ```
 package hello;
@@ -295,7 +295,7 @@ public interface IGreetingService {
 ```
 
 Next, implement the service:
-```src/test/java/hello/GreetingService.java```
+```src/java/hello/GreetingService.java```
 
 ```
 package hello;
@@ -323,7 +323,7 @@ public class GreetingService implements IGreetingService {
 ```
 
 The application needs to be configured to do IoC dependency injection. Create the following file:
-```src/test/java/hello/AppConfig.java```
+```src/java/hello/AppConfig.java```
 
 ```
 package hello;
