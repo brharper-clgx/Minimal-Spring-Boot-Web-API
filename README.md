@@ -208,6 +208,77 @@ You can run tests either through your IDE (VS Code has an extension: Java Test R
 ```
 > ./gradlew test -i
 ```
+### Integration Tests
+Create a subdirectory structure for your tests:
+
+```
+> mkdir -p src/test/java/hello/unit
+```
+
+Create a test class:
+```src/test/java/hello/unit/integration/GreetingControllerTest.java```
+
+```
+package hello.integration;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.net.URL;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
+public class GreetingContorllerTests {
+
+	@Autowired
+	private MockMvc mvc;
+
+	@LocalServerPort
+    private int port;
+
+    private URL base;
+
+    @Autowired
+    private TestRestTemplate template;
+
+    @Before
+    public void setUp() throws Exception {
+        this.base = new URL("http://localhost:" + port + "/");
+    }
+	
+	@Test
+	public void GreetingConroller_greeting_Mocked_ReturnsOkWithContent() throws Exception {
+		mvc.perform(MockMvcRequestBuilders.get("/greeting").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andExpect(content().string(equalTo("{\"id\":1,\"content\":\"Hello, World!\"}")));
+	}
+
+	@Test
+    public void GreetingConroller_greeting_Integration_ReturnsOkWithContent() throws Exception {
+        ResponseEntity<String> response = template.getForEntity(base.toString() + "greeting",
+                String.class);
+        assertThat(response.getBody(), equalTo("{\"id\":1,\"content\":\"Hello, World!\"}"));
+    }
+}
+```
+
 
 ## Dependency Injection
 Let's extract the GreetingController logic into a service and inject it. First create the interface:
@@ -317,42 +388,3 @@ public class GreetingControllerTests {
 
 }
 ```
-
-<!-- ### Integration Tests
-Create a subdirectory structure for your tests:
-
-```
-> mkdir -p src/test/java/hello/unit
-```
-
-Create a test class:
-```src/test/java/hello/unit/integration/GreetingControllerTest.java```
-
-```
-package hello;
-
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class GreetingControllerTests {
-
-	@Test
-	public void GreetingConroller_greeting_ReturnsGreeting() {
-		// Arrange
-		GreetingController target = new GreetingController();
-		
-		// Act
-		Greeting result = target.greeting("Joe Tester");
-
-		// Assert
-		assertEquals(1, result.getId());
-		assertEquals("Hello, Joe Tester!", result.getContent());
-	}
-
-}
-``` -->
