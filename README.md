@@ -209,6 +209,115 @@ You can run tests either through your IDE (VS Code has an extension: Java Test R
 > ./gradlew test -i
 ```
 
+## Dependency Injection
+Let's extract the GreetingController logic into a service and inject it. First create the interface:
+
+```src/test/java/hello/IGreetingService.java```
+
+```
+package hello;
+
+public interface IGreetingService {
+
+    Greeting getGreeting(String name);
+}
+```
+
+Next, implement the service:
+```src/test/java/hello/GreetingService.java```
+
+```
+package hello;
+
+public interface IGreetingService {
+
+    Greeting getGreeting(String name);
+}
+```
+
+The application needs to be configured to do IoC dependency injection. Create the following file:
+```src/test/java/hello/AppConfig.java```
+
+```
+package hello;
+
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+ 
+@Configuration
+@ComponentScan(basePackages = "hello")
+public class AppConfig {
+ 
+}
+```
+
+Now change the GreetingController to use @Autowire with constructor injection:
+```
+@RestController
+public class GreetingController {
+
+    private IGreetingService service;
+
+    @Autowired
+    public GreetingController(IGreetingService service) {
+        this.service = service;
+    }
+
+    @RequestMapping("/greeting")
+    public Greeting greeting(@RequestParam(value="name", defaultValue="World") String name) {
+        return service.getGreeting(name);
+    }
+}
+```
+
+### Mocking Components
+Your IDE will probably have let you know that the unit test you wrote is now broken. This is because the GreetingController now requires a parameter in its constructor. If we want to isolate the controller from its dependencies then we should mock the service out. We can use (Mockito)[http://site.mockito.org/].
+
+*Note: the test we're about to write is silly. But, for the sake of illustrating the use of Mockito, bear with me.*
+
+First, modify the ```build.gradle``` files as follows:
+```
+...
+repositories {
+    mavenCentral()
+    jcenter() 
+}
+...
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    testCompile('org.springframework.boot:spring-boot-starter-test', 'org.mockito:mockito-core:2.+')
+}
+```
+
+Then update the unit test file as follows:
+```
+import static org.mockito.Mockito.*;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class GreetingControllerTests {
+
+	@Test
+	public void GreetingConroller_greeting_ReturnsGreeting() {
+		// Arrange
+		String name = "Joe Tester";
+		int id = 1;
+		GreetingService service = mock(GreetingService.class);
+		GreetingController target = new GreetingController(service);
+
+		when(service.getGreeting(name)).thenReturn(new Greeting(id, "Hello, "+ name +"!"));
+		
+		// Act
+		Greeting result = target.greeting(name);
+
+		// Assert
+		assertEquals(id, result.getId());
+		assertEquals("Hello, "+ name +"!", result.getContent());
+	}
+
+}
+```
+
 <!-- ### Integration Tests
 Create a subdirectory structure for your tests:
 
