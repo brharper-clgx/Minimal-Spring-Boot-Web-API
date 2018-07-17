@@ -14,17 +14,17 @@
 
 ## Initialize Gradle Project
 Use the command 'gradle init' to initialize gradle in your project's root directory:
-```
-> gradle init
+```bash
+gradle init
 ```
 
 If a 'gradlew' file is not created, use the following command:
-```
-> gradle wrapper
+```bash
+gradle wrapper
 ```
 
 Next, edit the ***build.gradle*** file with the following:
-```
+```gradle
 buildscript {
     repositories {
         mavenCentral()
@@ -59,15 +59,16 @@ dependencies {
 
 ## Source Code
 Next create the following subdirectory structure for your source code:
-```
-> mkdir -p src/main/java/hello
+```bash
+mkdir -p src/main/java/hello
 ```
 
 Create your first resource representation class:
 ```
 src/main/java/hello/Greeting.java
 ```
-```
+
+```java
 package hello;
 
 public class Greeting {
@@ -93,7 +94,7 @@ public class Greeting {
 Now, create a controller:
 ```src/main/java/hello/GreetingController.java```
 
-```
+```java
 package hello;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -120,7 +121,7 @@ public class GreetingController {
 Finally, create the main application class:
 ```src/main/java/hello/Application.java```
 
-```
+```java
 package hello;
 
 import org.springframework.boot.SpringApplication;
@@ -137,8 +138,8 @@ public class Application {
 
 ## Try It Out
 Run the web app with:
-```
-> ./gradlew bootrun
+```bash
+./gradlew bootrun
 ```
 
 Open a web browser and visit [http://localhost:8080/greeting](http://localhost:8080/greeting). Your browser should display the following:
@@ -152,9 +153,9 @@ Change the url to [http://localhost:8080/greeting?name=YourName](http://localhos
 ```
 
 ## Write Tests
-Add a new 'testCompile' dependenc to the ```build.gradle``` file:
-```
-
+Add a new 'testCompile' dependency to the ```build.gradle``` file:
+```gradle
+...
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     testCompile('org.springframework.boot:spring-boot-starter-test')
@@ -164,14 +165,14 @@ dependencies {
 ### Unit Tests
 Create a subdirectory structure for your unit tests:
 
-```
-> mkdir -p src/test/java/hello/unit
+```bash
+mkdir -p src/test/java/hello/unit
 ```
 
 Create a test class:
 ```src/test/java/hello/unit/GreetingControllerTests.java```
 
-```
+```java
 package hello.unit;
 
 import hello.Greeting;
@@ -205,20 +206,20 @@ public class GreetingControllerTests {
 
 You can run tests either through your IDE (VS Code has an extension: Java Test Runner). Alternatively, you can run the following command:
 
-```
-> ./gradlew test -i
+```bash
+./gradlew test -i
 ```
 ### Integration Tests
 Create a subdirectory structure for your tests:
 
-```
-> mkdir -p src/test/java/hello/integration
+```basj
+mkdir -p src/test/java/hello/integration
 ```
 
 Create a test class:
 ```src/test/java/hello/unit/integration/GreetingControllerTests.java```
 
-```
+```java
 package hello.integration;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -285,7 +286,7 @@ Let's extract the GreetingController logic into a service and inject it. First c
 
 ```src/java/hello/IGreetingService.java```
 
-```
+```java
 package hello;
 
 public interface IGreetingService {
@@ -297,7 +298,7 @@ public interface IGreetingService {
 Next, implement the service:
 ```src/java/hello/GreetingService.java```
 
-```
+```java
 package hello;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -325,7 +326,7 @@ public class GreetingService implements IGreetingService {
 The application needs to be configured to do IoC dependency injection. Create the following file:
 ```src/java/hello/AppConfig.java```
 
-```
+```java
 package hello;
 
 import org.springframework.context.annotation.ComponentScan;
@@ -339,7 +340,8 @@ public class AppConfig {
 ```
 
 Now change the GreetingController to use @Autowire with constructor injection:
-```
+```java
+...
 @RestController
 public class GreetingController {
 
@@ -363,7 +365,7 @@ Your IDE will probably have let you know that the unit test you wrote is now bro
 *Note: the test we're about to write is silly. But, for the sake of illustrating the use of Mockito, bear with me.*
 
 First, modify the ```build.gradle``` files as follows:
-```
+```gradle
 ...
 repositories {
     mavenCentral()
@@ -377,7 +379,8 @@ dependencies {
 ```
 
 Then update the unit test file as follows:
-```
+```java
+...
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
